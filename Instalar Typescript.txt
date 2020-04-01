@@ -1,0 +1,30 @@
+Instalar nodejs
+
+Primero descargar nodejs del siguiente link: https://nodejs.org/es/download/ O si esta en linux podemos utilizar el comando: sudo apt install nodejs
+Instalar npm
+
+Si esta en windows puede utilizar el comando: npm install npm@latest -g O si esta en linux podemos utilizar el comando: sudo apt install npm
+Instalar typescript con npm
+
+Utilizamos el comando: npm install typescript -s
+Como Utilizar Typescript
+Como crear el archivo tsconfig.json
+
+Si no existe, en la carpeta donde se desea tener el archivo de configuracion corremos el siguiente comando:
+
+>>> tsc --init
+
+Como transpilar los archivos.ts modificados de manera automatica
+
+Para transpilar todos los archivos de typescript debemos agregar las siguientes lineas al archivo tsconfig.json:
+
+"watch": true       //transpilara todos los archivos ts
+"outDir": "./src"   //Directorio donde almacenara los js generados
+"rootDir": "./"     //Directorio donde estaran los archivos ts
+
+Como compilar los archivos
+
+Ademas si queremos compilar todos los archivos con un simple ctrl + s debemos correr el comando:
+
+//se llama a este para que se mantenga escuchando
+>>> tsc -w
