@@ -37,7 +37,7 @@ header nav ul li {
 }
  
 header nav ul li:hover {
-	background:#7d7da2 
+	background:#2c3e50;
 }
  
 header nav ul li a {
@@ -88,3 +88,15 @@ header nav ul li .caret {
 	margin-right:0px;
 }
  
+
+.subir{
+    padding: 5px 10px;
+    background: #2c3e50;
+    color:#fff;
+    border:0px solid #fff;
+}
+ 
+.subir:hover{
+    color:#fff;
+    background: #2c3e50;
+}
