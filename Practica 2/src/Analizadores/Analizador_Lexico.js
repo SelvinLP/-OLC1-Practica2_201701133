@@ -190,12 +190,13 @@ var Analizador_L = /** @class */ (function () {
                                 this.Tokens.push({ "Id": 23, "Lexema": Cadena, "Descripcion": "Comentario Multiple", "Fila": Fila, "Columna": Columna });
                                 Columna++;
                                 Cadena = "";
+                                pos++;
                                 Estado = 0;
                             }
                             else {
-                                if (Contenido.charAt(pos) != '\n') {
+                                if (Contenido.charAt(pos) == '\n') {
                                     Fila++;
-                                    Columna = 0;
+                                    Columna = 1;
                                 }
                                 var tem = Contenido.charAt(pos);
                                 Cadena += tem;
@@ -204,13 +205,14 @@ var Analizador_L = /** @class */ (function () {
                         catch (error) { }
                     }
                     else {
-                        if (Contenido.charAt(pos) != '\n') {
+                        if (Contenido.charAt(pos) == '\n') {
                             Fila++;
-                            Columna = 0;
+                            Columna = 1;
                         }
                         var tem = Contenido.charAt(pos);
                         Cadena += tem;
                     }
+                    break;
                 }
                 case 6: {
                     //Contenido entre "

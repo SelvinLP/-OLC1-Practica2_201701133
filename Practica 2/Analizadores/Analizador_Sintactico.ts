@@ -5,8 +5,10 @@ let CantidadTabs=1;
 let variable:string[];let Contenidvar="";
 let variableTotal:{Lexema: string, Tipo:string, Fila:number, Columna:number}[]=[];let Tipovar="";
 let CadenaHTML="";
+let cantidadCasos=0;
 class Analizador_S{
     constructor(){
+        cantidadCasos=0;
         ContenidoPython="";
         CadenaHTML="";
         CantidadTabs=0;
@@ -20,15 +22,21 @@ class Analizador_S{
                 pos++;
                 pos=this.Main_Metodo(pos);
                 
-            }else{//-> <FUNCIONES>
-                let postem=pos;
-                pos=this.Tipo(pos,0);
-                if(pos!=postem){//Es que si es una funcoin
-                    pos=this.Funciones(pos);
-                }else{
-                    pos++;
+            }else{
+                //-><COMENTARIO SIMPLE> || <COMENTARIO MULTIPLE>
+                let postt=pos
+                pos=this.Comentario(pos);
+                if(pos==postt){
+                    pos=this.Comentario(pos);
+                    //-> <FUNCIONES>
+                    let postem=pos;
+                    pos=this.Tipo(pos,0);
+                    if(pos!=postem){//Es que si es una funcoin
+                        pos=this.Funciones(pos);
+                    }else{
+                        pos++;
+                    }
                 }
-                
             }
             
         }
@@ -57,6 +65,8 @@ class Analizador_S{
                     }
                 }
                 pos=this.LlaveD(pos);
+                ContenidoPython+="if __name__ = \"__main__\":"+"\n";
+                ContenidoPython+="\t"+"main()"+"\n";
                 break;
             }else if(L_Tokens_S[pos].Descripcion =="Id"){//-> id ( <PARAMETROS> ) { <SENTENCIAS_M> }
                 //Agregar Contenido
@@ -145,6 +155,7 @@ class Analizador_S{
                 for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
                 ContenidoPython+="switcher={ \n";
                 CantidadTabs++;
+                cantidadCasos=0;
                 while(pos<L_Tokens_S.length){
                     let postem=pos;
                     pos=this.Casos(pos);
@@ -305,7 +316,14 @@ class Analizador_S{
                 pos=this.ParD(pos,0);
                 pos=this.PuntoyComa(pos);
                 ContenidoPython+="\n";
-            }else{//-><DECLARACION>
+            }else{
+                //-><COMENTARIO SIMPLE> || <COMENTARIO MULTIPLE>
+                while(pos<L_Tokens_S.length){
+                    let postt=pos
+                    pos=this.Comentario(pos);
+                    if(pos==postt){break;}
+                }
+                //-><DECLARACION>
                 variable=[];
                 Contenidvar="";
                 pos=this.Declaracion(pos);
@@ -874,12 +892,13 @@ class Analizador_S{
             }
             pos=this.DosPuntos(pos);
             pos=this.Sentencias_Case(pos);
+            cantidadCasos++;
             CantidadTabs--;
             for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
             ContenidoPython+=", \n";
         }else if(L_Tokens_S[pos].Lexema.toLowerCase() =="default"){//->default : <SENTENCIAS_CASE> <CASOS>
             for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
-            ContenidoPython+="default ";
+            ContenidoPython+=(cantidadCasos+1)+" ";
             pos++;
             pos=this.DosPuntos(pos);
             pos=this.Sentencias_Case(pos);
@@ -1050,6 +1069,23 @@ class Analizador_S{
                 }
             }
         } 
+        return pos;
+    }
+
+    public Comentario(pos:number):number{//<COMENTARIO>
+        if(pos<L_Tokens_S.length){
+            if(L_Tokens_S[pos].Descripcion=="Comentario Simple"){
+                for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
+                ContenidoPython+="#"+L_Tokens_S[pos].Lexema +"\n";
+                pos++;
+                
+            }else if(L_Tokens_S[pos].Descripcion=="Comentario Multiple"){
+                for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
+                ContenidoPython+="\'\'\'"+L_Tokens_S[pos].Lexema +"\'\'\'"+"\n";
+                pos++;
+                
+            }
+        }
         return pos;
     }
 

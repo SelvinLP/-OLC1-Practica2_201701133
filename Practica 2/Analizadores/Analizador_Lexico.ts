@@ -153,24 +153,27 @@ class Analizador_L{
                     break;
                 }
                 case 5:{
+                      
                       //Comentario multilinea
                       if(Contenido.charAt(pos).charCodeAt(0)==42){
                             try {
                               if(Contenido.charAt(pos+1).charCodeAt(0)==47){
                                     this.Tokens.push({"Id":23,"Lexema":Cadena, "Descripcion":"Comentario Multiple","Fila":Fila,"Columna":Columna});
-                                    Columna++;Cadena="";
+                                    Columna++;Cadena="";pos++;
                                     Estado=0;
                               }else{
-                                   if(Contenido.charAt(pos)!='\n'){Fila++;Columna=0;}
+                                   if(Contenido.charAt(pos)=='\n'){Fila++;Columna=1;}
                                    var tem=Contenido.charAt(pos);
                                    Cadena+=tem;
                               } 
                             } catch (error) {}
                       }else{  
-                          if(Contenido.charAt(pos)!='\n'){Fila++;Columna=0;}
+                          if(Contenido.charAt(pos)=='\n'){Fila++;Columna=1;}
                           var tem=Contenido.charAt(pos);
                           Cadena+=tem;
+                          
                       }
+                  break;
                 }
                 case 6:{
                       //Contenido entre "

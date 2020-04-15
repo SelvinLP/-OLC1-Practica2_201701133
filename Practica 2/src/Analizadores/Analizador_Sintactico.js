@@ -8,8 +8,10 @@ var Contenidvar = "";
 var variableTotal = [];
 var Tipovar = "";
 var CadenaHTML = "";
+var cantidadCasos = 0;
 var Analizador_S = /** @class */ (function () {
     function Analizador_S() {
+        cantidadCasos = 0;
         ContenidoPython = "";
         CadenaHTML = "";
         CantidadTabs = 0;
@@ -23,14 +25,21 @@ var Analizador_S = /** @class */ (function () {
                 pos++;
                 pos = this.Main_Metodo(pos);
             }
-            else { //-> <FUNCIONES>
-                var postem = pos;
-                pos = this.Tipo(pos, 0);
-                if (pos != postem) { //Es que si es una funcoin
-                    pos = this.Funciones(pos);
-                }
-                else {
-                    pos++;
+            else {
+                //-><COMENTARIO SIMPLE> || <COMENTARIO MULTIPLE>
+                var postt = pos;
+                pos = this.Comentario(pos);
+                if (pos == postt) {
+                    pos = this.Comentario(pos);
+                    //-> <FUNCIONES>
+                    var postem = pos;
+                    pos = this.Tipo(pos, 0);
+                    if (pos != postem) { //Es que si es una funcoin
+                        pos = this.Funciones(pos);
+                    }
+                    else {
+                        pos++;
+                    }
                 }
             }
         }
@@ -62,6 +71,8 @@ var Analizador_S = /** @class */ (function () {
                     }
                 }
                 pos = this.LlaveD(pos);
+                ContenidoPython += "if __name__ = \"__main__\":" + "\n";
+                ContenidoPython += "\t" + "main()" + "\n";
                 break;
             }
             else if (L_Tokens_S[pos].Descripcion == "Id") { //-> id ( <PARAMETROS> ) { <SENTENCIAS_M> }
@@ -159,6 +170,7 @@ var Analizador_S = /** @class */ (function () {
                 }
                 ContenidoPython += "switcher={ \n";
                 CantidadTabs++;
+                cantidadCasos = 0;
                 while (pos < L_Tokens_S.length) {
                     var postem = pos;
                     pos = this.Casos(pos);
@@ -347,7 +359,16 @@ var Analizador_S = /** @class */ (function () {
                 pos = this.PuntoyComa(pos);
                 ContenidoPython += "\n";
             }
-            else { //-><DECLARACION>
+            else {
+                //-><COMENTARIO SIMPLE> || <COMENTARIO MULTIPLE>
+                while (pos < L_Tokens_S.length) {
+                    var postt = pos;
+                    pos = this.Comentario(pos);
+                    if (pos == postt) {
+                        break;
+                    }
+                }
+                //-><DECLARACION>
                 variable = [];
                 Contenidvar = "";
                 pos = this.Declaracion(pos);
@@ -969,6 +990,7 @@ var Analizador_S = /** @class */ (function () {
             }
             pos = this.DosPuntos(pos);
             pos = this.Sentencias_Case(pos);
+            cantidadCasos++;
             CantidadTabs--;
             for (var postb = 0; postb < CantidadTabs; postb++) {
                 ContenidoPython += "\t";
@@ -979,7 +1001,7 @@ var Analizador_S = /** @class */ (function () {
             for (var postb = 0; postb < CantidadTabs; postb++) {
                 ContenidoPython += "\t";
             }
-            ContenidoPython += "default ";
+            ContenidoPython += (cantidadCasos + 1) + " ";
             pos++;
             pos = this.DosPuntos(pos);
             pos = this.Sentencias_Case(pos);
@@ -1170,6 +1192,25 @@ var Analizador_S = /** @class */ (function () {
                         break;
                     }
                 }
+            }
+        }
+        return pos;
+    };
+    Analizador_S.prototype.Comentario = function (pos) {
+        if (pos < L_Tokens_S.length) {
+            if (L_Tokens_S[pos].Descripcion == "Comentario Simple") {
+                for (var postb = 0; postb < CantidadTabs; postb++) {
+                    ContenidoPython += "\t";
+                }
+                ContenidoPython += "#" + L_Tokens_S[pos].Lexema + "\n";
+                pos++;
+            }
+            else if (L_Tokens_S[pos].Descripcion == "Comentario Multiple") {
+                for (var postb = 0; postb < CantidadTabs; postb++) {
+                    ContenidoPython += "\t";
+                }
+                ContenidoPython += "\'\'\'" + L_Tokens_S[pos].Lexema + "\'\'\'" + "\n";
+                pos++;
             }
         }
         return pos;
