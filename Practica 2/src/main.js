@@ -61,6 +61,40 @@ document.getElementById("Des_Py").onclick=function(){
   GuardarPy();
 }
 
+function GuardarHtml(){
+  var NombreArchivo=prompt("Ingrese Nombre del Archivo")+".html";
+  var ContenidoDeArchivo = document.getElementById('CampoTextoHTML').value;
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ContenidoDeArchivo));
+  element.setAttribute('download', NombreArchivo);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+} 
+document.getElementById("Des_Html").onclick=function(){
+  GuardarHtml();
+}
+
+function GuardarJson(){
+  var NombreArchivo=prompt("Ingrese Nombre del Archivo")+".json";
+  var ContenidoDeArchivo = document.getElementById('CampoTextoJSON').value;
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ContenidoDeArchivo));
+  element.setAttribute('download', NombreArchivo);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+} 
+document.getElementById("Des_Json").onclick=function(){
+  GuardarJson();
+}
+
 function Enviar_Analisis_L(){
   var ContenidoDeArchivo = document.getElementById('CampoTexto').value
   Analizar(ContenidoDeArchivo);

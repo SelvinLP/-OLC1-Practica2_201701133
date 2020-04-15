@@ -7,9 +7,11 @@ var variable;
 var Contenidvar = "";
 var variableTotal = [];
 var Tipovar = "";
+var CadenaHTML = "";
 var Analizador_S = /** @class */ (function () {
     function Analizador_S() {
         ContenidoPython = "";
+        CadenaHTML = "";
         CantidadTabs = 0;
         variableTotal = [];
     }
@@ -609,6 +611,9 @@ var Analizador_S = /** @class */ (function () {
                 while (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Descripcion == "Cadena") {
                         //Agregamos Contenido
+                        if (L_Tokens_S[pos].Lexema.length != 1) {
+                            CadenaHTML += L_Tokens_S[pos].Lexema;
+                        }
                         ContenidoPython += L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -706,6 +711,9 @@ var Analizador_S = /** @class */ (function () {
                 while (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Descripcion == "Cadena") {
                         //Agregamos Contenido
+                        if (L_Tokens_S[pos].Lexema.length != 1) {
+                            CadenaHTML += L_Tokens_S[pos].Lexema;
+                        }
                         Contenidvar += L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -807,6 +815,9 @@ var Analizador_S = /** @class */ (function () {
                         while (pos < L_Tokens_S.length) {
                             if (L_Tokens_S[pos].Descripcion == "Cadena") {
                                 //Agregamos Contenido
+                                if (L_Tokens_S[pos].Lexema.length != 1) {
+                                    CadenaHTML += L_Tokens_S[pos].Lexema;
+                                }
                                 ContenidoPython += L_Tokens_S[pos].Lexema;
                                 pos++;
                                 break;
@@ -1073,6 +1084,9 @@ var Analizador_S = /** @class */ (function () {
                 ContenidoPython += L_Tokens_S[pos].Lexema;
                 pos++;
                 if (L_Tokens_S[pos].Descripcion == "Cadena") {
+                    if (L_Tokens_S[pos].Lexema.length != 1) {
+                        CadenaHTML += L_Tokens_S[pos].Lexema;
+                    }
                     ContenidoPython += L_Tokens_S[pos].Lexema;
                     pos++;
                 }
@@ -1333,6 +1347,9 @@ var Analizador_S = /** @class */ (function () {
                 while (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Descripcion == "Cadena") {
                         //Agregamos Contenido
+                        if (L_Tokens_S[pos].Lexema.length != 1) {
+                            CadenaHTML += L_Tokens_S[pos].Lexema;
+                        }
                         ContenidoPython += L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -1498,6 +1515,7 @@ function Analizar_S() {
     nuevo.Inicio(1);
     //Agregamos Contenido
     AgregarContenidoT();
+    CambioHTML_JSON(CadenaHTML);
     document.getElementById("CampoTextoPython").value = ContenidoPython;
     alert("Se Analizo Correctamente");
 }

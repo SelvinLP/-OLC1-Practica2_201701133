@@ -4,9 +4,11 @@ let ContenidoPython="";
 let CantidadTabs=1;
 let variable:string[];let Contenidvar="";
 let variableTotal:{Lexema: string, Tipo:string, Fila:number, Columna:number}[]=[];let Tipovar="";
+let CadenaHTML="";
 class Analizador_S{
     constructor(){
         ContenidoPython="";
+        CadenaHTML="";
         CantidadTabs=0;
         variableTotal=[];
     }
@@ -542,6 +544,9 @@ class Analizador_S{
                 while(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Descripcion =="Cadena"){
                         //Agregamos Contenido
+                        if(L_Tokens_S[pos].Lexema.length!=1){
+                            CadenaHTML+=L_Tokens_S[pos].Lexema;
+                        }
                         ContenidoPython+=L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -632,6 +637,9 @@ class Analizador_S{
                 while(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Descripcion =="Cadena"){
                         //Agregamos Contenido
+                        if(L_Tokens_S[pos].Lexema.length!=1){
+                            CadenaHTML+=L_Tokens_S[pos].Lexema;
+                        }
                         Contenidvar+=L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -726,6 +734,9 @@ class Analizador_S{
                         while(pos<L_Tokens_S.length){
                             if(L_Tokens_S[pos].Descripcion =="Cadena"){
                                 //Agregamos Contenido
+                                if(L_Tokens_S[pos].Lexema.length!=1){
+                                    CadenaHTML+=L_Tokens_S[pos].Lexema;
+                                }
                                 ContenidoPython+=L_Tokens_S[pos].Lexema;
                                 pos++;
                                 break;
@@ -749,6 +760,7 @@ class Analizador_S{
                         break;
                     }else if(L_Tokens_S[pos].Descripcion=="Id"){//-> Id
                         //Agregamos Contenido
+                        
                         ContenidoPython+=L_Tokens_S[pos].Lexema;
                         pos++;
                         pos=this.Operacion(pos);
@@ -959,6 +971,9 @@ class Analizador_S{
                 ContenidoPython+=L_Tokens_S[pos].Lexema;
                 pos++;
                 if(L_Tokens_S[pos].Descripcion =="Cadena"){
+                    if(L_Tokens_S[pos].Lexema.length!=1){
+                        CadenaHTML+=L_Tokens_S[pos].Lexema;
+                    }
                     ContenidoPython+=L_Tokens_S[pos].Lexema;
                     pos++;
                 }
@@ -1191,6 +1206,9 @@ class Analizador_S{
                 while(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Descripcion =="Cadena"){
                         //Agregamos Contenido
+                        if(L_Tokens_S[pos].Lexema.length!=1){
+                            CadenaHTML+=L_Tokens_S[pos].Lexema;
+                        }
                         ContenidoPython+=L_Tokens_S[pos].Lexema;
                         pos++;
                         break;
@@ -1345,6 +1363,7 @@ function Analizar_S(){
     
     //Agregamos Contenido
     AgregarContenidoT();
+    CambioHTML_JSON(CadenaHTML);
     (<HTMLInputElement>document.getElementById("CampoTextoPython")).value=ContenidoPython;
     alert("Se Analizo Correctamente");
 }
