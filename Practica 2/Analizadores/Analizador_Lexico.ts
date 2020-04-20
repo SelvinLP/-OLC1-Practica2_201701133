@@ -185,7 +185,7 @@ class Analizador_L{
                         Columna++;
                         Estado=0; 
                       }else{
-                        if(Contenido.charAt(pos)!='\n'){Fila++;Columna=0;}
+                        if(Contenido.charAt(pos)=='\n'){Fila++;Columna=0;}
                           var tem=Contenido.charAt(pos);
                           Cadena+=tem;
                       }
@@ -201,7 +201,7 @@ class Analizador_L{
                         Columna++;
                         Estado=0; 
                       }else{
-                        if(Contenido.charAt(pos)!='\n'){Fila++;Columna=0;}
+                        if(Contenido.charAt(pos)=='\n'){Fila++;Columna=0;}
                           var tem=Contenido.charAt(pos);
                           Cadena+=tem;
                       }

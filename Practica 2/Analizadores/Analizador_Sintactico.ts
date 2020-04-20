@@ -329,7 +329,11 @@ class Analizador_S{
                 pos=this.Declaracion(pos);
                 for(let posv=0;posv<variable.length;posv++){
                     for(let postb=0;postb<CantidadTabs;postb++){ContenidoPython+="\t";}
-                    ContenidoPython+="var "+variable[posv]+"="+Contenidvar+"\n";
+                    if(Contenidvar!=""){
+                        ContenidoPython+="var "+variable[posv]+"="+Contenidvar+"\n";
+                    }else{
+                        ContenidoPython+="var "+variable[posv]+"\n";
+                    }
                 }
                 //Declaracion solo para asignacion de valor
                 if(variable.length==0){
@@ -526,6 +530,7 @@ class Analizador_S{
                 ContenidoPython+=L_Tokens_S[pos].Lexema;
                 pos++;
                 pos=this.Operacion(pos);
+                pos=this.PosiblePar(pos);
                 break;
             }else if(L_Tokens_S[pos].Lexema=="\""){//->“ Cadena ” <OPERACION>
                 //Agregamos Contenido
@@ -554,6 +559,7 @@ class Analizador_S{
                     }
                 }
                 pos=this.Operacion(pos);
+                pos=this.PosiblePar(pos);
                 break;
             }else if(L_Tokens_S[pos].Lexema=="\'"){//' Cadena ' <OPERACION>
                 //Agregamos Contenido
@@ -585,13 +591,18 @@ class Analizador_S{
                     }
                 }
                 pos=this.Operacion(pos);
+                pos=this.PosiblePar(pos);
                 break;
             }else if(L_Tokens_S[pos].Descripcion=="Id"){//-> Id
                 //Agregamos Contenido
                 ContenidoPython+=L_Tokens_S[pos].Lexema;
                 pos++;
                 pos=this.Operacion(pos);
+                pos=this.PosiblePar(pos);
                 break;
+            }else if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                ContenidoPython+=L_Tokens_S[pos].Lexema;
+                pos++;
             }else{
                 L_Tokens_S_Error.push({"Id":-1,"Lexema":L_Tokens_S[pos].Lexema, "Descripcion":"Error Sintactico, Se Esperaba: Id , \" , \' , Digito","Fila":L_Tokens_S[pos].Fila,"Columna":L_Tokens_S[pos].Columna});
                 pos++;
@@ -606,6 +617,12 @@ class Analizador_S{
                 //Agregamos Contenido
                 Contenidvar+=L_Tokens_S[pos].Lexema;
                 pos++;
+                if(pos<L_Tokens_S.length){
+                    if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                        Contenidvar+=L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
                 if(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Lexema =="+" || L_Tokens_S[pos].Lexema =="-" || L_Tokens_S[pos].Lexema =="*" || L_Tokens_S[pos].Lexema =="/"){
                         Contenidvar+=L_Tokens_S[pos].Lexema;
@@ -637,6 +654,12 @@ class Analizador_S{
                         break;
                     }else{
                         L_Tokens_S_Error.push({"Id":-1,"Lexema":L_Tokens_S[pos].Lexema, "Descripcion":"Error Sintactico, Se Esperaba: \"","Fila":L_Tokens_S[pos].Fila,"Columna":L_Tokens_S[pos].Columna});
+                        pos++;
+                    }
+                }
+                if(pos<L_Tokens_S.length){
+                    if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                        Contenidvar+=L_Tokens_S[pos].Lexema;
                         pos++;
                     }
                 }
@@ -678,6 +701,12 @@ class Analizador_S{
                     }
                 }
                 if(pos<L_Tokens_S.length){
+                    if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                        Contenidvar+=L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
+                if(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Lexema =="+" || L_Tokens_S[pos].Lexema =="-" || L_Tokens_S[pos].Lexema =="*" || L_Tokens_S[pos].Lexema =="/"){
                         Contenidvar+=L_Tokens_S[pos].Lexema;
                         pos++;
@@ -690,6 +719,12 @@ class Analizador_S{
                 Contenidvar+=L_Tokens_S[pos].Lexema;
                 pos++;
                 if(pos<L_Tokens_S.length){
+                    if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                        Contenidvar+=L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
+                if(pos<L_Tokens_S.length){
                     if(L_Tokens_S[pos].Lexema =="+" || L_Tokens_S[pos].Lexema =="-" || L_Tokens_S[pos].Lexema =="*" || L_Tokens_S[pos].Lexema =="/"){
                         Contenidvar+=L_Tokens_S[pos].Lexema;
                         pos++;
@@ -697,6 +732,9 @@ class Analizador_S{
                     }
                 }
                 break;
+            }else if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                Contenidvar+=L_Tokens_S[pos].Lexema;
+                pos++;
             }else{
                 L_Tokens_S_Error.push({"Id":-1,"Lexema":L_Tokens_S[pos].Lexema, "Descripcion":"Error Sintactico, Se Esperaba: Id , \" , \' , Digito","Fila":L_Tokens_S[pos].Fila,"Columna":L_Tokens_S[pos].Columna});
                 pos++;
@@ -715,6 +753,7 @@ class Analizador_S{
                         //Agregamos Contenido
                         ContenidoPython+=L_Tokens_S[pos].Lexema;
                         pos++;
+                        pos=this.PosiblePar(pos);
                         pos=this.Operacion(pos);
                         break;
                     }else if(L_Tokens_S[pos].Lexema=="\""){//->“ Cadena ” <OPERACION>
@@ -743,6 +782,7 @@ class Analizador_S{
                                 pos++;
                             }
                         }
+                        pos=this.PosiblePar(pos);
                         pos=this.Operacion(pos);
                         break;
                     }else if(L_Tokens_S[pos].Lexema=="\'"){//' Cadena ' <OPERACION>
@@ -774,6 +814,7 @@ class Analizador_S{
                                 pos++;
                             }
                         }
+                        pos=this.PosiblePar(pos);
                         pos=this.Operacion(pos);
                         break;
                     }else if(L_Tokens_S[pos].Descripcion=="Id"){//-> Id
@@ -781,8 +822,12 @@ class Analizador_S{
                         
                         ContenidoPython+=L_Tokens_S[pos].Lexema;
                         pos++;
+                        pos=this.PosiblePar(pos);
                         pos=this.Operacion(pos);
                         break;
+                    }else if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                        ContenidoPython+=L_Tokens_S[pos].Lexema;
+                        pos++;
                     }else{
                         L_Tokens_S_Error.push({"Id":-1,"Lexema":L_Tokens_S[pos].Lexema, "Descripcion":"Error Sintactico, Se Esperaba: Id , \" , \' , Digito","Fila":L_Tokens_S[pos].Fila,"Columna":L_Tokens_S[pos].Columna});
                         pos++;
@@ -1389,9 +1434,21 @@ class Analizador_S{
         }
         return pos;
     }
+    //posibles
+    public PosiblePar(pos:number):number{
+        if(pos<L_Tokens_S.length){
+            if(L_Tokens_S[pos].Lexema==")" || L_Tokens_S[pos].Lexema=="("){
+                ContenidoPython+=L_Tokens_S[pos].Lexema;
+                pos++;
+            }
+        }
+        return pos;
+        
+    }
 }
 
 function Analizar_S(){
+    CadenaHTML="";
     L_Tokens_S = RetornarLista();
     L_Tokens_S_Error=RetornarLista_Error();
     let nuevo=new Analizador_S();

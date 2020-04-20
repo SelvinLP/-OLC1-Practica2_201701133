@@ -5,6 +5,7 @@ var Analis_Cambio = /** @class */ (function () {
     function Analis_Cambio() {
         this.Cantidad_TB = 0;
         CadenaJson = "";
+        CadenaHtmlEnvio = "";
         this.Cantidad_TB = 0;
     }
     Analis_Cambio.prototype.Analizar = function (Contenido) {

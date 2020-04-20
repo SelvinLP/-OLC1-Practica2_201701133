@@ -225,7 +225,7 @@ var Analizador_L = /** @class */ (function () {
                         Estado = 0;
                     }
                     else {
-                        if (Contenido.charAt(pos) != '\n') {
+                        if (Contenido.charAt(pos) == '\n') {
                             Fila++;
                             Columna = 0;
                         }
@@ -245,7 +245,7 @@ var Analizador_L = /** @class */ (function () {
                         Estado = 0;
                     }
                     else {
-                        if (Contenido.charAt(pos) != '\n') {
+                        if (Contenido.charAt(pos) == '\n') {
                             Fila++;
                             Columna = 0;
                         }

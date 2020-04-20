@@ -4,6 +4,7 @@ class Analis_Cambio{
     Cantidad_TB=0;
     constructor() {
         CadenaJson="";
+        CadenaHtmlEnvio="";
         this.Cantidad_TB=0;
     }
 

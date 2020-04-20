@@ -376,7 +376,12 @@ var Analizador_S = /** @class */ (function () {
                     for (var postb = 0; postb < CantidadTabs; postb++) {
                         ContenidoPython += "\t";
                     }
-                    ContenidoPython += "var " + variable[posv] + "=" + Contenidvar + "\n";
+                    if (Contenidvar != "") {
+                        ContenidoPython += "var " + variable[posv] + "=" + Contenidvar + "\n";
+                    }
+                    else {
+                        ContenidoPython += "var " + variable[posv] + "\n";
+                    }
                 }
                 //Declaracion solo para asignacion de valor
                 if (variable.length == 0) {
@@ -592,6 +597,7 @@ var Analizador_S = /** @class */ (function () {
                 ContenidoPython += L_Tokens_S[pos].Lexema;
                 pos++;
                 pos = this.Operacion(pos);
+                pos = this.PosiblePar(pos);
                 break;
             }
             else if (L_Tokens_S[pos].Lexema == "\"") { //->“ Cadena ” <OPERACION>
@@ -623,6 +629,7 @@ var Analizador_S = /** @class */ (function () {
                     }
                 }
                 pos = this.Operacion(pos);
+                pos = this.PosiblePar(pos);
                 break;
             }
             else if (L_Tokens_S[pos].Lexema == "\'") { //' Cadena ' <OPERACION>
@@ -657,6 +664,7 @@ var Analizador_S = /** @class */ (function () {
                     }
                 }
                 pos = this.Operacion(pos);
+                pos = this.PosiblePar(pos);
                 break;
             }
             else if (L_Tokens_S[pos].Descripcion == "Id") { //-> Id
@@ -664,7 +672,12 @@ var Analizador_S = /** @class */ (function () {
                 ContenidoPython += L_Tokens_S[pos].Lexema;
                 pos++;
                 pos = this.Operacion(pos);
+                pos = this.PosiblePar(pos);
                 break;
+            }
+            else if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                ContenidoPython += L_Tokens_S[pos].Lexema;
+                pos++;
             }
             else {
                 L_Tokens_S_Error.push({ "Id": -1, "Lexema": L_Tokens_S[pos].Lexema, "Descripcion": "Error Sintactico, Se Esperaba: Id , \" , \' , Digito", "Fila": L_Tokens_S[pos].Fila, "Columna": L_Tokens_S[pos].Columna });
@@ -679,6 +692,12 @@ var Analizador_S = /** @class */ (function () {
                 //Agregamos Contenido
                 Contenidvar += L_Tokens_S[pos].Lexema;
                 pos++;
+                if (pos < L_Tokens_S.length) {
+                    if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                        Contenidvar += L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
                 if (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Lexema == "+" || L_Tokens_S[pos].Lexema == "-" || L_Tokens_S[pos].Lexema == "*" || L_Tokens_S[pos].Lexema == "/") {
                         Contenidvar += L_Tokens_S[pos].Lexema;
@@ -713,6 +732,12 @@ var Analizador_S = /** @class */ (function () {
                     }
                     else {
                         L_Tokens_S_Error.push({ "Id": -1, "Lexema": L_Tokens_S[pos].Lexema, "Descripcion": "Error Sintactico, Se Esperaba: \"", "Fila": L_Tokens_S[pos].Fila, "Columna": L_Tokens_S[pos].Columna });
+                        pos++;
+                    }
+                }
+                if (pos < L_Tokens_S.length) {
+                    if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                        Contenidvar += L_Tokens_S[pos].Lexema;
                         pos++;
                     }
                 }
@@ -757,6 +782,12 @@ var Analizador_S = /** @class */ (function () {
                     }
                 }
                 if (pos < L_Tokens_S.length) {
+                    if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                        Contenidvar += L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
+                if (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Lexema == "+" || L_Tokens_S[pos].Lexema == "-" || L_Tokens_S[pos].Lexema == "*" || L_Tokens_S[pos].Lexema == "/") {
                         Contenidvar += L_Tokens_S[pos].Lexema;
                         pos++;
@@ -770,6 +801,12 @@ var Analizador_S = /** @class */ (function () {
                 Contenidvar += L_Tokens_S[pos].Lexema;
                 pos++;
                 if (pos < L_Tokens_S.length) {
+                    if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                        Contenidvar += L_Tokens_S[pos].Lexema;
+                        pos++;
+                    }
+                }
+                if (pos < L_Tokens_S.length) {
                     if (L_Tokens_S[pos].Lexema == "+" || L_Tokens_S[pos].Lexema == "-" || L_Tokens_S[pos].Lexema == "*" || L_Tokens_S[pos].Lexema == "/") {
                         Contenidvar += L_Tokens_S[pos].Lexema;
                         pos++;
@@ -777,6 +814,10 @@ var Analizador_S = /** @class */ (function () {
                     }
                 }
                 break;
+            }
+            else if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                Contenidvar += L_Tokens_S[pos].Lexema;
+                pos++;
             }
             else {
                 L_Tokens_S_Error.push({ "Id": -1, "Lexema": L_Tokens_S[pos].Lexema, "Descripcion": "Error Sintactico, Se Esperaba: Id , \" , \' , Digito", "Fila": L_Tokens_S[pos].Fila, "Columna": L_Tokens_S[pos].Columna });
@@ -795,6 +836,7 @@ var Analizador_S = /** @class */ (function () {
                         //Agregamos Contenido
                         ContenidoPython += L_Tokens_S[pos].Lexema;
                         pos++;
+                        pos = this.PosiblePar(pos);
                         pos = this.Operacion(pos);
                         break;
                     }
@@ -826,6 +868,7 @@ var Analizador_S = /** @class */ (function () {
                                 pos++;
                             }
                         }
+                        pos = this.PosiblePar(pos);
                         pos = this.Operacion(pos);
                         break;
                     }
@@ -860,6 +903,7 @@ var Analizador_S = /** @class */ (function () {
                                 pos++;
                             }
                         }
+                        pos = this.PosiblePar(pos);
                         pos = this.Operacion(pos);
                         break;
                     }
@@ -867,8 +911,13 @@ var Analizador_S = /** @class */ (function () {
                         //Agregamos Contenido
                         ContenidoPython += L_Tokens_S[pos].Lexema;
                         pos++;
+                        pos = this.PosiblePar(pos);
                         pos = this.Operacion(pos);
                         break;
+                    }
+                    else if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                        ContenidoPython += L_Tokens_S[pos].Lexema;
+                        pos++;
                     }
                     else {
                         L_Tokens_S_Error.push({ "Id": -1, "Lexema": L_Tokens_S[pos].Lexema, "Descripcion": "Error Sintactico, Se Esperaba: Id , \" , \' , Digito", "Fila": L_Tokens_S[pos].Fila, "Columna": L_Tokens_S[pos].Columna });
@@ -1547,9 +1596,20 @@ var Analizador_S = /** @class */ (function () {
         }
         return pos;
     };
+    //posibles
+    Analizador_S.prototype.PosiblePar = function (pos) {
+        if (pos < L_Tokens_S.length) {
+            if (L_Tokens_S[pos].Lexema == ")" || L_Tokens_S[pos].Lexema == "(") {
+                ContenidoPython += L_Tokens_S[pos].Lexema;
+                pos++;
+            }
+        }
+        return pos;
+    };
     return Analizador_S;
 }());
 function Analizar_S() {
+    CadenaHTML = "";
     L_Tokens_S = RetornarLista();
     L_Tokens_S_Error = RetornarLista_Error();
     var nuevo = new Analizador_S();
